@@ -1,9 +1,10 @@
-name: Build Flutter APK
+name: Build and Release APK
 
 on:
   push:
-    branches: [ main, master ]
-  workflow_dispatch:  # 允许手动触发
+    tags:
+      - 'v*'  # 当推送以 v 开头的标签时触发
+  workflow_dispatch:
 
 jobs:
   build:
@@ -36,9 +37,11 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      # 6. 上传 APK 到 Actions 工件
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
+      # 6. 创建 Release 并上传 APK
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: app-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          files: build/app/outputs/flutter-apk/app-release.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
