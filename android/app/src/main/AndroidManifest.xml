@@ -3,7 +3,8 @@
 
     <application
         android:label="video_player_header_example"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:name="${applicationName}">
         <activity
             android:name="io.flutter.embedding.android.FlutterActivity"
             android:exported="true"
